@@ -16,7 +16,7 @@ def getargs():
     sys.exit()
     
   if "-t" in sys.argv:
-    timeinterval = sys.argv[sys.argv.index("-t") + 1]
+    timeinterval = int(sys.argv[sys.argv.index("-t") + 1])
   return wordlist, url, timeinterval
   
 
@@ -42,10 +42,11 @@ def request(l, url, tint):
   for i in l:
     try:
       rqst = requests.get(f"{url}/{i}")
-      print(rqst.status_code)
+      if rqst.status_code < 400:
+        print(f"[ + ]     {url}/{i}\n[{rqst.status_code}]\n")
     except:
       print(f"{url}/{i} doesn't exist")
-    
+    time.sleep(tint)
 
 
 if __name__ == "__main__":
