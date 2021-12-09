@@ -3,4 +3,14 @@ A simple python-based directory enumeration script for pentesters looking for sl
 Note that this tool is meant exclusively for authorized pentests. 
 
 Usage:
-python3 dirsearcher -w (wordlist) -u (URL)
+python3 dirsearcher (args)
+
+args:
+  Mandatory:
+  -w {wordlist}
+  -u {url}
+  
+  Optional:
+  -t {seconds}
+  -o {file name}
+  
