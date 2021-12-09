@@ -15,9 +15,9 @@ def getargs():
     print("Please suppl url (-u) and wordlist (-w)")
     sys.exit()
     
-  if "-t" in sys.argv():
+  if "-t" in sys.argv:
     timeinterval = sys.argv[sys.argv.index("-t") + 1]
-  return wordl, url, timeinterval
+  return wordlist, url, timeinterval
   
 
 def wrdlist(wordlist):
@@ -37,9 +37,14 @@ def wrdlist(wordlist):
 
 
 
-def request(l):
+def request(l, url, tint):
   worked = []
   for i in l:
+    try:
+      rqst = requests.get(f"{url}/{i}")
+      print(rqst.status_code)
+    except:
+      print(f"{url}/{i} doesn't exist")
     
 
 
@@ -49,7 +54,7 @@ if __name__ == "__main__":
   wordl, url, timeinterval = getargs()
   while not worked: 
     list, worked = wrdlist(wordl)
-  requests(list, url)
+  request(list, url, timeinterval)
   
   
   
