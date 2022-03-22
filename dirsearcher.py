@@ -22,7 +22,14 @@ def getargs():
   # Gets optional arguments
   if "-t" in sys.argv:
     timeinterval = int(sys.argv[sys.argv.index("-t") + 1])
-  return wordlist, url, timeinterval
+
+  if "-c" in sys.argv:
+    cookies = getcookies()
+    if cookies:
+      cookiesd = handlecookies(cookies)
+  if cookiesd:
+    return wordlist, url, timeinterval, cookiesd
+  return wordlist, url, timeinterval, None
   
 
 def wrdlist(wordlist):
@@ -44,22 +51,44 @@ def wrdlist(wordlist):
 
 
 # Brains of the operation. Sends requests and analyses response
-def request(l, url, tint):
+def request(l, url, tint, *cookiesd):
   worked = []
   for i in l:
     try:
-      rqst = requests.get(f"{url}/{i}")
+      if cookiesd:
+        rqst = requests.get(f"{url}/{i}", cookies=cookiesd)
+      else:
+        rqst = requests.get(f"{url}/{i}")
       if rqst.status_code < 400:
         print(f"[ + ]     {url}/{i}\n[{rqst.status_code}]\n")
     except:
       print(f"{url}/{i} doesn't exist")
     time.sleep(tint)
 
+def getcookies():
+  resp, cookies = "", []
+  while resp != "done":
+    resp = input("CookieName:CookieValue ('Done' to quit)")
+    if resp != "done":
+      return cookies
+    else:
+      if ":" in resp:
+        cookies.append(resp)
+
+def handlecookies(cookies):
+  if len(cookies) > 0:
+    # cookies = [i.replace(":", " ").split() for i in cookies]
+    cookiesd = {i[0]:i[1] for i in cookies if i.replace(":", " ").split() in cookies}
+    return cookiesd
+  else:
+    return None
+      
+      
 # Heart of the operation. Starts all the functions
 if __name__ == "__main__":
   worked = False
   startup()
-  wordl, url, timeinterval = getargs()
+  wordl, url, timeinterval, cookies = getargs()
   while not worked: 
     list, worked = wrdlist(wordl)
   request(list, url, timeinterval)
